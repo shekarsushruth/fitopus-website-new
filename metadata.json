@@ -1,0 +1,6 @@
+{
+  "name": "Fitopus",
+  "description": "Healthy Meals, Delivered Daily. A high-energy, editorial fitness nutrition platform.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

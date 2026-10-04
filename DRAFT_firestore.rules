@@ -1,0 +1,69 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default-deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // User Profile Validation
+    function isValidUserProfile(data) {
+      return data.keys().hasAll(['fullName', 'phoneNumber']) &&
+             data.keys().size() <= 4 &&
+             data.fullName is string && data.fullName.size() >= 2 && data.fullName.size() <= 100 &&
+             data.phoneNumber is string && data.phoneNumber.size() >= 8 && data.phoneNumber.size() <= 20 &&
+             (!('email' in data) || (data.email is string && data.email.size() <= 100)) &&
+             (!('joinedAt' in data) || data.joinedAt is timestamp);
+    }
+
+    // Subscription Validation
+    function isValidSubscription(data) {
+      return data.keys().hasAll(['durationId', 'mealsPerDay', 'dietaryPreference', 'primaryGoalId', 'totalInvestment', 'status']) &&
+             data.durationId is string && data.durationId.size() <= 50 &&
+             data.mealsPerDay is list && data.mealsPerDay.size() >= 1 && data.mealsPerDay.size() <= 5 &&
+             data.dietaryPreference is string &&
+             data.primaryGoalId is string &&
+             data.totalInvestment is number && data.totalInvestment >= 0 &&
+             data.status in ['draft', 'active', 'completed'] &&
+             (!('createdAt' in data) || data.createdAt is timestamp) &&
+             (!('updatedAt' in data) || data.updatedAt is timestamp);
+    }
+
+    // Rules for User Profiles
+    match /user_profiles/{userId} {
+      allow get: if isOwner(userId);
+      allow create: if isOwner(userId) && isValidUserProfile(incoming());
+      allow update: if isOwner(userId) && isValidUserProfile(incoming()) && 
+                    incoming().diff(existing()).affectedKeys().hasOnly(['fullName', 'phoneNumber', 'email']);
+    }
+
+    // Rules for Subscriptions
+    match /subscriptions/{userId} {
+      allow get: if isOwner(userId);
+      allow create: if isOwner(userId) && isValidSubscription(incoming());
+      allow update: if isOwner(userId) && isValidSubscription(incoming()) &&
+                    incoming().diff(existing()).affectedKeys().hasOnly(['durationId', 'mealsPerDay', 'dietaryPreference', 'primaryGoalId', 'totalInvestment', 'status', 'updatedAt']);
+    }
+  }
+}

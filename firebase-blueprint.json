@@ -1,0 +1,46 @@
+{
+  "entities": {
+    "Lead": {
+      "title": "Lead",
+      "description": "A combined record of user profile and subscription details.",
+      "type": "object",
+      "properties": {
+        "profile": { "$ref": "UserProfile" },
+        "subscription": { "$ref": "Subscription" },
+        "submittedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "UserProfile": {
+      "title": "User Profile",
+      "description": "Details about a user's identity and contact information.",
+      "type": "object",
+      "properties": {
+        "fullName": { "type": "string", "description": "User's full name." },
+        "phoneNumber": { "type": "string", "description": "User's phone number." },
+        "email": { "type": "string", "description": "User's email address." }
+      },
+      "required": ["fullName", "phoneNumber"]
+    },
+    "Subscription": {
+      "title": "Subscription",
+      "description": "Information about a user's meal plan subscription.",
+      "type": "object",
+      "properties": {
+        "durationId": { "type": "string", "description": "ID of the selected duration." },
+        "mealsPerDay": { "type": "array", "description": "List of selected meal types per day." },
+        "dietaryPreference": { "type": "string", "description": "User's dietary preference." },
+        "primaryGoalId": { "type": "string", "description": "ID of the user's primary nutrition goal." },
+        "totalInvestment": { "type": "number", "description": "Total cost of the subscription." },
+        "status": { "type": "string", "enum": ["draft", "active", "completed"], "description": "Current status of the subscription." },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["durationId", "mealsPerDay", "dietaryPreference", "primaryGoalId", "totalInvestment", "status"]
+    }
+  },
+  "firestore": {
+    "/leads/{leadId}": {
+      "schema": "Lead",
+      "description": "Stores individual lead submissions containing profile and subscription details."
+    }
+  }
+}

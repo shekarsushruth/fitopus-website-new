@@ -1,0 +1,64 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap');
+
+@theme {
+  --font-headline: "Poppins", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-display: "Poppins", sans-serif;
+  --font-label: "Inter", sans-serif;
+
+  /* Fitopus Kinetic Joy Palette */
+  --color-primary: #695f00;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #fee705;
+  --color-on-primary-container: #726700;
+  --color-primary-fixed: #fbe400;
+  --color-primary-fixed-dim: #dcc800;
+
+  --color-secondary: #006972;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #83f0fe;
+  --color-on-secondary-container: #006d77;
+
+  --color-tertiary: #825154;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: #ffddde;
+  --color-on-tertiary-container: #8a585b;
+
+  --color-surface: #fff8f7;
+  --color-on-surface: #331013;
+  --color-surface-dim: #ffced0;
+  --color-surface-bright: #fff8f7;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #fff0f0;
+  --color-surface-container: #ffe9e9;
+  --color-surface-container-high: #ffe1e2;
+  --color-surface-container-highest: #ffdada;
+  --color-surface-variant: #ffdada;
+  --color-on-surface-variant: #4b4732;
+
+  --color-outline: #7c775f;
+  --color-outline-variant: #cdc7ab;
+
+  --radius-lg: 2rem;
+  --radius-xl: 3rem;
+}
+
+@layer base {
+  body {
+    @apply bg-surface text-on-surface font-body;
+  }
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+.glass-header {
+  @apply bg-surface/60 backdrop-blur-2xl;
+}
+
+.organic-blob {
+  border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+}
+
